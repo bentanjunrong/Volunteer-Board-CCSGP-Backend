@@ -1,12 +1,16 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 	server := gin.Default()
 
 	server.GET("/test", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
+		ctx.JSON(http.StatusOK, gin.H{
 			"message": "why am i doing this at 4 in the morning?",
 		})
 	})
