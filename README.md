@@ -1,0 +1,1 @@
+# update password in `db.go` and `go run .`
