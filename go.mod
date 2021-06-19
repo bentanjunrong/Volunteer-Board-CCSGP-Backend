@@ -3,8 +3,8 @@ module github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend
 go 1.16
 
 require (
-	github.com/elastic/go-elasticsearch/v8 v8.0.0-20210608143047-aa1301e7ba9d // indirect
-	github.com/gin-gonic/gin v1.7.2 // indirect
+	github.com/elastic/go-elasticsearch/v7 v7.13.2-0.20210608143511-56969024403a // indirect
+	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
