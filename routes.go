@@ -10,6 +10,13 @@ func InitRouter() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
+	auth := router.Group("auth")
+	{
+		authController := new(controllers.AuthController)
+		auth.POST("", authController.Register)
+		auth.POST("login", authController.Login)
+	}
+
 	user := router.Group("user")
 	{
 		userController := new(controllers.UserController)
