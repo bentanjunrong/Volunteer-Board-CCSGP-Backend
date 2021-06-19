@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitRouter() *gin.Engine {
+func InitRouter() {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
@@ -16,5 +16,5 @@ func InitRouter() *gin.Engine {
 		user.GET("", userController.Retrieve)
 	}
 
-	return router
+	router.Run("localhost:8080") // TODO: put this in an env file
 }
