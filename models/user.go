@@ -25,10 +25,6 @@ type User struct {
 }
 
 func (u *User) Create(user User) error {
-	// Build the request body.
-	var b strings.Builder
-	b.WriteString(`{"title" : "users"}`)
-
 	// Set up the request object.
 	body, err := json.Marshal(user)
 	req := esapi.IndexRequest{
