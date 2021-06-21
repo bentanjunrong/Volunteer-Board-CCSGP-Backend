@@ -20,12 +20,13 @@ func (a *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	if err := authModel.Create(user); err != nil {
+	savedUser, err := authModel.Create(user)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	c.JSON(http.StatusOK, gin.H{"user": savedUser})
 }

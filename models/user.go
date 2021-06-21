@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
+	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/utils"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 )
 
@@ -24,9 +25,17 @@ type User struct {
 	UpdatedAt         string   `json:"updated_at"`
 }
 
-func (u *User) Create(user User) error {
+func (u *User) Create(user User) (User, error) {
 	// Set up the request object.
+	hashedPass, err := utils.Hash(user.Password)
+	if err != nil {
+		log.Fatalf("Error hashing pass: %s", err)
+	}
+	user.Password = hashedPass
 	body, err := json.Marshal(user)
+	if err != nil {
+		log.Fatalf("Error marshalling user: %s", err)
+	}
 	req := esapi.IndexRequest{
 		Index: "users",
 		Body:  strings.NewReader(string(body)),
@@ -34,11 +43,8 @@ func (u *User) Create(user User) error {
 
 	// Perform the request with the client.
 	res, err := req.Do(context.Background(), db.GetDB())
-	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
-	}
 	res.Body.Close()
-	return nil
+	return user, err
 }
 
 func (u *User) Update(user User) (*User, error) {
