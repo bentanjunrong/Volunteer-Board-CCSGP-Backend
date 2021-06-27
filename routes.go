@@ -17,5 +17,12 @@ func InitRouter() {
 		user.POST("login", userController.Login)
 	}
 
+	org := router.Group("org")
+	{
+		orgController := new(controllers.OrgController)
+		org.POST("", orgController.Register)
+		org.POST("login", orgController.Login)
+	}
+
 	router.Run("localhost:8080") // TODO: put this in an env file
 }
