@@ -10,17 +10,11 @@ func InitRouter() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	auth := router.Group("auth")
-	{
-		authController := new(controllers.AuthController)
-		auth.POST("", authController.Register)
-		auth.POST("login", authController.Login)
-	}
-
 	user := router.Group("user")
 	{
 		userController := new(controllers.UserController)
-		user.GET("", userController.Retrieve)
+		user.POST("", userController.Register)
+		user.POST("login", userController.Login)
 	}
 
 	router.Run("localhost:8080") // TODO: put this in an env file
