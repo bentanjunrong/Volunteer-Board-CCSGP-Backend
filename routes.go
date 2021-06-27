@@ -27,6 +27,7 @@ func InitRouter() {
 	opp := router.Group("opp")
 	{
 		oppController := new(controllers.OppController)
+		opp.GET("", oppController.GetAll)
 		opp.POST("", oppController.Create)
 	}
 

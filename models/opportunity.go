@@ -15,10 +15,10 @@ type Opportunity struct {
 	Name             string   `json:"name" binding:"required"`
 	Description      string   `json:"description" binding:"required"`
 	OrganisationName string   `json:"organisation_name" binding:"required"`
-	AgeRequirement   string   `json:"age_requirement" binding:"required"`
+	AgeRequirement   int16    `json:"age_requirement" binding:"required"`
 	Location         string   `json:"location" binding:"required"`
 	PostingDate      string   `json:"posting_date" binding:"required"`
-	Shifts           []Shift  `json:"shifts"`
+	Shifts           []Shift  `json:"shifts"  binding:"required"`
 	Causes           []string `json:"causes"`
 	IsApproved       bool     `json:"is_approved"`
 	CreatedAt        string   `json:"created_at"`
@@ -40,4 +40,16 @@ func (o *Opportunity) Create(opp Opportunity) (Opportunity, error) {
 	res, err := req.Do(context.Background(), db.GetDB())
 	res.Body.Close()
 	return opp, err
+}
+
+func (o *Opportunity) GetAll() ([]map[string]interface{}, error) {
+	allOpps, err := db.GetAll("opps")
+	if err != nil {
+		return nil, err
+	}
+	var res []map[string]interface{}
+	for _, obj := range allOpps {
+		res = append(res, (obj["_source"]).(map[string]interface{}))
+	}
+	return res, nil
 }

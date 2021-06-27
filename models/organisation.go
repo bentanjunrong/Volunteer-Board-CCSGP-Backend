@@ -43,7 +43,7 @@ func (o *Organisation) Create(org Organisation) (Organisation, error) {
 }
 
 func (o *Organisation) Read(email string) (map[string]interface{}, error) {
-	org, err := db.GetOne("orgs", map[string]string{
+	org, err := db.GetOneByField("orgs", map[string]string{
 		"email": email,
 	})
 	if err != nil {
