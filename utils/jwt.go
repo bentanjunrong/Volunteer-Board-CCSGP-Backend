@@ -14,13 +14,13 @@ type JwtWrapper struct {
 }
 
 type JwtClaim struct {
-	Email string
+	UserID string
 	jwt.StandardClaims
 }
 
-func (j *JwtWrapper) GenerateToken(email string) (string, error) {
+func (j *JwtWrapper) GenerateToken(userID string) (string, error) {
 	claims := &JwtClaim{
-		Email: email,
+		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(j.ExpirationHours)).Unix(),
 			Issuer:    j.Issuer,
@@ -36,7 +36,7 @@ func (j *JwtWrapper) GenerateToken(email string) (string, error) {
 	return signedToken, nil
 }
 
-func (j *JwtWrapper) ValidateToken(signedToken string) error {
+func (j *JwtWrapper) ValidateToken(signedToken string) (*JwtClaim, error) {
 	token, err := jwt.ParseWithClaims(
 		signedToken,
 		&JwtClaim{},
@@ -46,17 +46,17 @@ func (j *JwtWrapper) ValidateToken(signedToken string) error {
 	)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	claims, ok := token.Claims.(*JwtClaim)
 	if !ok {
-		return errors.New("Error when parsing claims.")
+		return nil, errors.New("Error when parsing claims.")
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		return errors.New("JWT expired.")
+		return nil, errors.New("JWT expired.")
 	}
 
-	return nil
+	return claims, nil
 }
