@@ -24,5 +24,11 @@ func InitRouter() {
 		org.POST("login", orgController.Login)
 	}
 
+	opp := router.Group("opp")
+	{
+		oppController := new(controllers.OppController)
+		opp.POST("", oppController.Create)
+	}
+
 	router.Run("localhost:8080") // TODO: put this in an env file
 }
