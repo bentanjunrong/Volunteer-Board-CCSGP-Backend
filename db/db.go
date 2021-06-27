@@ -1,6 +1,10 @@
 package db
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -34,4 +38,40 @@ func InitDB() {
 
 func GetDB() *elasticsearch.Client {
 	return db
+}
+
+// TODO: decide on return type. []map[string]interface{} is fine if we leave unmarshalling of id and body to the model.
+func GetAll(index string, field map[string]string) ([]map[string]interface{}, error) {
+	fmt.Println("\nSEARCHPARAMS: ", field)
+	var buffer bytes.Buffer
+	query := map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"must": map[string]interface{}{
+					"term": field,
+				},
+			},
+		},
+	}
+	json.NewEncoder(&buffer).Encode(query)
+	response, err := db.Search(db.Search.WithIndex(index), db.Search.WithBody(&buffer))
+	if err != nil {
+		log.Fatalf("Error searching for %s in index %s.", index, field)
+		return nil, err
+	}
+	var result map[string]map[string][]map[string]interface{} // absolutely disgusting. no btr way here?
+	json.NewDecoder(response.Body).Decode(&result)
+	allMatches := result["hits"]["hits"]
+	if len(allMatches) == 0 {
+		return nil, errors.New("No entries found.")
+	}
+	return allMatches, nil
+}
+
+func GetOne(index string, field map[string]string) (map[string]interface{}, error) {
+	allMatches, err := GetAll(index, field)
+	if err != nil {
+		return nil, err
+	}
+	return allMatches[0], nil
 }
