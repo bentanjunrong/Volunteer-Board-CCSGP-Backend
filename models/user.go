@@ -27,11 +27,7 @@ type User struct {
 
 func (u *User) Create(user User) (User, error) {
 	// Set up the request object.
-	hashedPass, err := utils.Hash(user.Password)
-	if err != nil {
-		log.Fatalf("Error hashing pass: %s", err)
-	}
-	user.Password = hashedPass
+	user.Password = utils.Hash(user.Password)
 	body, err := json.Marshal(user)
 	if err != nil {
 		log.Fatalf("Error marshalling user: %s", err)
