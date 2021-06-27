@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 
@@ -41,8 +40,7 @@ func GetDB() *elasticsearch.Client {
 }
 
 // TODO: decide on return type. []map[string]interface{} is fine if we leave unmarshalling of id and body to the model.
-func GetAll(index string, field map[string]string) ([]map[string]interface{}, error) {
-	fmt.Println("\nSEARCHPARAMS: ", field)
+func GetAllByField(index string, field map[string]string) ([]map[string]interface{}, error) {
 	var buffer bytes.Buffer
 	query := map[string]interface{}{
 		"query": map[string]interface{}{
@@ -68,10 +66,32 @@ func GetAll(index string, field map[string]string) ([]map[string]interface{}, er
 	return allMatches, nil
 }
 
-func GetOne(index string, field map[string]string) (map[string]interface{}, error) {
-	allMatches, err := GetAll(index, field)
+func GetOneByField(index string, field map[string]string) (map[string]interface{}, error) {
+	allMatches, err := GetAllByField(index, field)
 	if err != nil {
 		return nil, err
 	}
 	return allMatches[0], nil
+}
+
+func GetAll(index string) ([]map[string]interface{}, error) {
+	byteQuery := []byte(`
+		{
+			"query": {
+				"match_all": {}
+			}
+		}
+	`)
+	response, err := db.Search(db.Search.WithIndex(index), db.Search.WithBody(bytes.NewReader(byteQuery)))
+	if err != nil {
+		log.Fatalf("Error searching for all entries in index %s.", index)
+		return nil, err
+	}
+	var result map[string]map[string][]map[string]interface{}
+	json.NewDecoder(response.Body).Decode(&result)
+	allMatches := result["hits"]["hits"]
+	if len(allMatches) == 0 {
+		return nil, errors.New("No entries found.")
+	}
+	return allMatches, nil
 }

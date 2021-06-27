@@ -44,7 +44,7 @@ func (u *User) Create(user User) (User, error) {
 }
 
 func (u *User) Read(email string) (map[string]interface{}, error) {
-	user, err := db.GetOne("users", map[string]string{
+	user, err := db.GetOneByField("users", map[string]string{
 		"email": email,
 	})
 	if err != nil {
