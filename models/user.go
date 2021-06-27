@@ -15,9 +15,9 @@ type User struct {
 	Name              string   `json:"name" binding:"required"`
 	Email             string   `json:"email" binding:"required"`
 	Password          string   `json:"password" binding:"required"`
-	DateOfBirth       string   `json:"date_of_birth" binding:"required"`
-	Gender            string   `json:"gender" binding:"required"`
-	Age               int16    `json:"age" binding:"required"`
+	DateOfBirth       string   `json:"date_of_birth"`
+	Gender            string   `json:"gender"`
+	Age               int16    `json:"age"`
 	Availability      []string `json:"availability"`
 	SMSNotification   bool     `json:"sms_notification"`
 	EmailNotification bool     `json:"email_notification"`
