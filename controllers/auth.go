@@ -70,8 +70,8 @@ func (a *AuthController) Login(c *gin.Context) {
 	}
 
 	jwtWrapper := utils.JwtWrapper{
-		SecretKey:       "verysecretkey",
-		Issuer:          "AuthService",
+		SecretKey:       "mySecretKey", // TODO: pls put in env
+		Issuer:          "VolunteeryAuthService",
 		ExpirationHours: 24,
 	}
 
