@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/controllers"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,7 @@ func InitRouter() {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+	router.Use(cors.Default())
 
 	user := router.Group("user")
 	{
@@ -31,5 +33,5 @@ func InitRouter() {
 		opp.POST("", oppController.Create)
 	}
 
-	router.Run("localhost:8080") // TODO: put this in an env file
+	router.Run(":8080") // TODO: put this in an env file
 }
