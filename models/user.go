@@ -43,6 +43,16 @@ func (u *User) Create(user User) (User, error) {
 	return user, err
 }
 
+func (u *User) Read(email string) (map[string]interface{}, error) {
+	user, err := db.GetOne("users", map[string]string{
+		"email": email,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func (u *User) Update(user User) (*User, error) {
 	return u, nil
 }
