@@ -1,5 +1,6 @@
 package models
 
+// TODO: abstract these models such like in https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/model/model.go
 type Opportunity struct {
 	ID               string   `json:"opp_id"`
 	Name             string   `json:"name"`

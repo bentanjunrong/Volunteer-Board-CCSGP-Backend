@@ -13,7 +13,7 @@ type UserController struct{}
 
 var userModel = new(models.User)
 
-func (a *UserController) Register(c *gin.Context) {
+func (userC *UserController) Register(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -33,7 +33,7 @@ func (a *UserController) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"user": savedUser})
 }
 
-func (a *UserController) Login(c *gin.Context) {
+func (userC *UserController) Login(c *gin.Context) {
 	var login models.Login
 	if err := c.ShouldBindJSON(&login); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
