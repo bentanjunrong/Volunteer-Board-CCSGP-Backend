@@ -58,11 +58,11 @@ func (a *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	user_id := user["_id"].(string)
-	user_body := user["_source"].(map[string]interface{})
-	user_pass := user_body["password"].(string)
+	userID := user["_id"].(string)
+	userBody := user["_source"].(map[string]interface{})
+	userPass := userBody["password"].(string)
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user_pass), []byte(login.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(userPass), []byte(login.Password)); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Incorrect password.",
 		})
@@ -75,7 +75,7 @@ func (a *AuthController) Login(c *gin.Context) {
 		ExpirationHours: 24,
 	}
 
-	signedToken, err := jwtWrapper.GenerateToken(login.Email)
+	signedToken, err := jwtWrapper.GenerateToken(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg": "Error signing token.",
@@ -84,7 +84,6 @@ func (a *AuthController) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"user_id": user_id,
-		"token":   signedToken,
+		"token": signedToken,
 	})
 }
