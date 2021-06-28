@@ -41,3 +41,22 @@ func (oppC *OppController) GetAll(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"opportunities": allOpps})
 }
+
+func (oppC *OppController) Search(c *gin.Context) {
+	params := c.Request.URL.Query()
+	val, ok := params["query"]
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Did not include query param.",
+		})
+		return
+	}
+	matchedOpps, err := oppModel.Search(val[0])
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"opportunities": matchedOpps})
+}

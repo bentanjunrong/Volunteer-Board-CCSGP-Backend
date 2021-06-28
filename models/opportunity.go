@@ -53,3 +53,15 @@ func (o *Opportunity) GetAll() ([]map[string]interface{}, error) {
 	}
 	return res, nil
 }
+
+func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
+	allOpps, err := db.Search(query, "opps")
+	if err != nil {
+		return nil, err
+	}
+	var res []map[string]interface{}
+	for _, obj := range allOpps {
+		res = append(res, (obj["_source"]).(map[string]interface{}))
+	}
+	return res, nil
+}

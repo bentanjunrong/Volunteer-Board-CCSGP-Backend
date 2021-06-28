@@ -31,6 +31,7 @@ func InitRouter() {
 		oppController := new(controllers.OppController)
 		opp.GET("", oppController.GetAll)
 		opp.POST("", oppController.Create)
+		opp.GET("/search", oppController.Search)
 	}
 
 	router.Run(":8080") // TODO: put this in an env file
