@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -82,6 +83,32 @@ func GetAll(index string) ([]map[string]interface{}, error) {
 			}
 		}
 	`)
+	response, err := db.Search(db.Search.WithIndex(index), db.Search.WithBody(bytes.NewReader(byteQuery)))
+	if err != nil {
+		log.Fatalf("Error searching for all entries in index %s.", index)
+		return nil, err
+	}
+	var result map[string]map[string][]map[string]interface{}
+	json.NewDecoder(response.Body).Decode(&result)
+	allMatches := result["hits"]["hits"]
+	if len(allMatches) == 0 {
+		return nil, errors.New("No entries found.")
+	}
+	return allMatches, nil
+}
+
+func Search(query string, index string) ([]map[string]interface{}, error) {
+	byteQuery := []byte(fmt.Sprintf(`
+		{
+			"query": {
+				"wildcard": {
+					"name": {
+						"value": "%s*"
+					}
+				}
+			}
+		}
+	`, query))
 	response, err := db.Search(db.Search.WithIndex(index), db.Search.WithBody(bytes.NewReader(byteQuery)))
 	if err != nil {
 		log.Fatalf("Error searching for all entries in index %s.", index)
