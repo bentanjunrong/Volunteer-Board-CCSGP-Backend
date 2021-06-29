@@ -49,7 +49,9 @@ func (o *Opportunity) GetAll() ([]map[string]interface{}, error) {
 	}
 	var res []map[string]interface{}
 	for _, obj := range allOpps {
-		res = append(res, (obj["_source"]).(map[string]interface{}))
+		opp := (obj["_source"]).(map[string]interface{})
+		opp["id"] = obj["_id"]
+		res = append(res, opp)
 	}
 	return res, nil
 }
