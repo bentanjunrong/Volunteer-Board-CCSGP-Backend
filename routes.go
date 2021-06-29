@@ -1,13 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/controllers"
 	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 func InitRouter() {
@@ -38,11 +34,5 @@ func InitRouter() {
 		opp.GET("/search", oppController.Search)
 	}
 
-	m := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("ec2-13-212-235-180.ap-southeast-1.compute.amazonaws.com"),
-		Cache:      autocert.DirCache("/var/www/.cache"),
-	}
-
-	log.Fatal(autotls.RunWithManager(router, &m))
+	router.Run(":8080") // TODO: put this in an env file
 }
