@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/controllers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -34,5 +36,5 @@ func InitRouter() {
 		opp.GET("/search", oppController.Search)
 	}
 
-	router.Run(":8080") // TODO: put this in an env file
+	router.Run(":" + os.Getenv("PORT"))
 }
