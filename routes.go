@@ -34,6 +34,7 @@ func InitRouter() {
 		opp.GET("", oppController.GetAll)
 		opp.POST("", oppController.Create)
 		opp.GET("/search", oppController.Search)
+		opp.GET("/get", oppController.GetOne)
 	}
 
 	router.Run(":" + os.Getenv("PORT"))

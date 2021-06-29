@@ -67,3 +67,17 @@ func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
 	}
 	return res, nil
 }
+
+func (o *Opportunity) GetOne(id string) (map[string]interface{}, error) {
+	allOpps, err := db.GetAllByField("opps", map[string]string{"_id": id})
+	if err != nil {
+		return nil, err
+	}
+	var res []map[string]interface{}
+	for _, obj := range allOpps {
+		opp := (obj["_source"]).(map[string]interface{})
+		opp["id"] = obj["_id"]
+		res = append(res, opp)
+	}
+	return res[0], nil
+}
