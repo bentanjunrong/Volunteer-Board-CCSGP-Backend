@@ -1,6 +1,6 @@
 # Setup 
 
-Update password in `db.go` and `go run .`
+`EXPORT PORT=8080`, `EXPORT ES_PASSWORD=XXX` and `go run .`
 
 
 # Create
