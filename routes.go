@@ -37,5 +37,12 @@ func InitRouter() {
 		opp.GET("/get", oppController.GetOne)
 	}
 
+	// health check route for the LB
+	router.GET("/health-check", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "im alive!",
+		})
+	})
+
 	router.Run(":" + os.Getenv("PORT"))
 }
