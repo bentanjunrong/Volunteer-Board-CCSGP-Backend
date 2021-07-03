@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/models"
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/utils"
@@ -63,8 +64,8 @@ func (orgC *OrgController) Login(c *gin.Context) {
 	}
 
 	jwtWrapper := utils.JwtWrapper{
-		SecretKey:       "mySecretKey", // TODO: pls put in env
-		Issuer:          "VolunteeryAuthService",
+		SecretKey:       os.Getenv("JWT_KEY"),
+		Issuer:          os.Getenv("JWT_ISSUER"),
 		ExpirationHours: 24,
 	}
 
