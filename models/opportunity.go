@@ -2,12 +2,9 @@ package models
 
 import (
 	"context"
-	"encoding/json"
-	"log"
-	"strings"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
-	"github.com/elastic/go-elasticsearch/v7/esapi"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // TODO: abstract these models such like in https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/model/model.go
@@ -18,28 +15,19 @@ type Opportunity struct {
 	AgeRequirement   int16    `json:"age_requirement" binding:"required"`
 	Location         string   `json:"location" binding:"required"`
 	PostingDate      string   `json:"posting_date" binding:"required"`
-	Shifts           []Shift  `json:"shifts"  binding:"required"`
+	Shifts           []Shift  `json:"shifts"  binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
 	Causes           []string `json:"causes"`
 	IsApproved       bool     `json:"is_approved"`
 	CreatedAt        string   `json:"created_at"`
 	UpdatedAt        string   `json:"updated_at"`
 }
 
-func (o *Opportunity) Create(opp Opportunity) (Opportunity, error) {
-	// Set up the request object.
-	body, err := json.Marshal(opp)
+func (o *Opportunity) Create(ctx context.Context, opp Opportunity) (*mongo.InsertOneResult, error) {
+	result, err := db.GetCollection("opps").InsertOne(ctx, opp)
 	if err != nil {
-		log.Fatalf("Error marshalling opportunity: %s", err)
+		return nil, err
 	}
-	req := esapi.IndexRequest{
-		Index: "opps",
-		Body:  strings.NewReader(string(body)),
-	}
-
-	// Perform the request with the client.
-	res, err := req.Do(context.Background(), db.GetDB())
-	res.Body.Close()
-	return opp, err
+	return result, nil
 }
 
 func (o *Opportunity) GetAll() ([]map[string]interface{}, error) {

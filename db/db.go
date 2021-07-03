@@ -18,34 +18,40 @@ import (
 )
 
 var db *elasticsearch.Client
+var mongoDB *mongo.Client
 
 func InitMongoDB() {
-	uri := "mongodb://localhost:27017/volunteery-db"
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
+
+	var err error
+	if mongoDB, err = mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("DB_URL"))); err != nil {
 		panic(err)
 	}
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
-	// Ping the primary
-	if err := client.Ping(ctx, readpref.Primary()); err != nil {
+	// ping health check
+	if err := mongoDB.Ping(ctx, readpref.Primary()); err != nil {
 		panic(err)
 	}
 	fmt.Println("Successfully connected to MongoDB.")
 }
 
+func GetCollection(collection string) *mongo.Collection {
+	return (*mongoDB).Database("volunteery-db").Collection(collection)
+}
+
+func DisconnectDB() {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := mongoDB.Disconnect(ctx); err != nil {
+		panic(err)
+	}
+}
+
 func InitDB() {
 	cfg := elasticsearch.Config{
-		Addresses: []string{
-			"https://volunteery-deployment.es.ap-southeast-1.aws.found.io:9243", // TODO: put in env file (https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/lianjia_svr.go#L11)
-		},
-		Username: "elastic", // TODO: put in env file
-		Password: os.Getenv("ES_PASSWORD"),
+		Addresses: []string{os.Getenv("ES_URL")},
+		Username:  os.Getenv("ES_USER"),
+		Password:  os.Getenv("ES_PASSWORD"),
 		Logger: &estransport.ColorLogger{
 			Output:             os.Stdout,
 			EnableRequestBody:  true,

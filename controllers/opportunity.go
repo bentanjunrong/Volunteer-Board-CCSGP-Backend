@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/models"
 	"github.com/gin-gonic/gin"
@@ -20,7 +22,9 @@ func (oppC *OppController) Create(c *gin.Context) {
 		return
 	}
 
-	_, err := oppModel.Create(opp)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	res, err := oppModel.Create(ctx, opp)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -28,7 +32,7 @@ func (oppC *OppController) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"opportunity": opp})
+	c.JSON(http.StatusOK, gin.H{"opp_id": res.InsertedID})
 }
 
 func (oppC *OppController) GetAll(c *gin.Context) {

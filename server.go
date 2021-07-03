@@ -13,6 +13,7 @@ func main() {
 	}
 
 	db.InitMongoDB()
+	defer db.DisconnectDB()
 	db.InitDB()
 	InitRouter()
 }
