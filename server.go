@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	db.InitMongoDB()
 	db.InitDB()
 	InitRouter()
 }
