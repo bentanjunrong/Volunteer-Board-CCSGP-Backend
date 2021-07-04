@@ -14,20 +14,6 @@ func InitRouter() {
 	router.Use(gin.Recovery())
 	router.Use(cors.Default())
 
-	user := router.Group("user")
-	{
-		userController := new(controllers.UserController)
-		user.POST("", userController.Register)
-		user.POST("login", userController.Login)
-	}
-
-	org := router.Group("org")
-	{
-		orgController := new(controllers.OrgController)
-		org.POST("", orgController.Register)
-		org.POST("login", orgController.Login)
-	}
-
 	opp := router.Group("opp")
 	{
 		oppController := new(controllers.OppController)
