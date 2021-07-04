@@ -4,7 +4,6 @@ module github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend
 go 1.16
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-elasticsearch/v7 v7.13.2-0.20210608143511-56969024403a
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.2
