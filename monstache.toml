@@ -1,0 +1,42 @@
+# Monstache settings
+
+# connect to MongoDB using the following URL
+mongo-url = "mongodb+srv://admin:nicetry@volunteery-db.ppegg.mongodb.net/test"
+
+# connect to the Elasticsearch REST API at the following node URLs
+elasticsearch-urls = ["https://volunteery.es.ap-southeast-1.aws.found.io:9243"]
+
+# if you need to seed an index from a collection and not just listen and sync changes events
+# you can copy entire collections or views from MongoDB to Elasticsearch
+direct-read-namespaces = ["volunteery-db.opps"]
+
+# Elasticsearch basic auth
+elasticsearch-user = "elastic"
+elasticsearch-password = "nicetry"
+
+# use 4 go routines concurrently pushing documents to Elasticsearch
+elasticsearch-max-conns = 4
+
+# propogate dropped collections in MongoDB as index deletes in Elasticsearch
+dropped-collections = true
+
+# propogate dropped databases in MongoDB as index deletes in Elasticsearch
+dropped-databases = true
+
+# resume processing from a timestamp saved in a previous run
+resume = true
+
+# use a custom resume strategy (tokens) instead of the default strategy (timestamps)
+# tokens work with MongoDB API 3.6+ while timestamps work only with MongoDB API 4.0+
+resume-strategy = 0
+
+# print detailed information including request traces
+verbose = true
+
+# enable clustering mode
+cluster-name = 'volunteery'
+
+# mapping to opps index
+[[mapping]]
+namespace = "volunteery-db.opps"
+index = "opps"
