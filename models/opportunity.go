@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // TODO: abstract these models such like in https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/model/model.go
@@ -33,7 +34,16 @@ func (o *Opportunity) Create(ctx context.Context, opp Opportunity) (*mongo.Inser
 }
 
 func (o *Opportunity) GetAll(ctx context.Context) ([]bson.M, error) {
-	cursor, err := db.GetCollection("opps").Find(ctx, bson.M{})
+	projection := bson.M{
+		"description":     0,
+		"shifts":          0,
+		"age_requirement": 0,
+	}
+	cursor, err := db.GetCollection("opps").Find(
+		ctx,
+		bson.M{},
+		options.Find().SetProjection(projection),
+	)
 	if err != nil {
 		return nil, err
 	}
