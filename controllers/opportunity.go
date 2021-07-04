@@ -36,7 +36,9 @@ func (oppC *OppController) Create(c *gin.Context) {
 }
 
 func (oppC *OppController) GetAll(c *gin.Context) {
-	allOpps, err := oppModel.GetAll()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	allOpps, err := oppModel.GetAll(ctx)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

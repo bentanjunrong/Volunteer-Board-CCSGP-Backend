@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -14,7 +15,7 @@ type Opportunity struct {
 	OrganisationName string   `json:"organisation_name" binding:"required"`
 	AgeRequirement   int16    `json:"age_requirement" binding:"required"`
 	Location         string   `json:"location" binding:"required"`
-	PostingDate      string   `json:"posting_date" binding:"required"`
+	Postin6gDate     string   `json:"posting_date" binding:"required"`
 	Shifts           []Shift  `json:"shifts"  binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
 	Causes           []string `json:"causes"`
 	IsApproved       bool     `json:"is_approved"`
@@ -30,18 +31,16 @@ func (o *Opportunity) Create(ctx context.Context, opp Opportunity) (*mongo.Inser
 	return result, nil
 }
 
-func (o *Opportunity) GetAll() ([]map[string]interface{}, error) {
-	allOpps, err := db.GetAll("opps")
+func (o *Opportunity) GetAll(ctx context.Context) ([]bson.M, error) {
+	cursor, err := db.GetCollection("opps").Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
-	var res []map[string]interface{}
-	for _, obj := range allOpps {
-		opp := (obj["_source"]).(map[string]interface{})
-		opp["id"] = obj["_id"]
-		res = append(res, opp)
+	var opps []bson.M
+	if err = cursor.All(ctx, &opps); err != nil {
+		return nil, err
 	}
-	return res, nil
+	return opps, nil
 }
 
 func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
