@@ -9,7 +9,7 @@ Type=simple
 User=rajeshbhatrohit
 Group=rajeshbhatrohit
 DynamicUser=yes
-ExecStart=/usr/bin/monstache
+ExecStart=/usr/bin/monstache -f /etc/systemd/system/monstache.service.d/monstache.toml
 Restart=always
 RestartSec=3
 
