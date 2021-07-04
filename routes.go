@@ -20,7 +20,7 @@ func InitRouter() {
 		opp.GET("", oppController.GetAll)
 		opp.POST("", oppController.Create)
 		opp.GET("/search", oppController.Search)
-		opp.GET("/get", oppController.GetOne)
+		opp.GET("/:id", oppController.GetOne)
 	}
 
 	// health check route for the LB
