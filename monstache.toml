@@ -1,7 +1,7 @@
 # Monstache settings
 
 # connect to MongoDB using the following URL
-mongo-url = "mongodb+srv://admin:nicetry@volunteery-db.ppegg.mongodb.net/test"
+mongo-url = "mongodb+srv://admin:DB_PASSWORD@volunteery-db.ppegg.mongodb.net/test"
 
 # connect to the Elasticsearch REST API at the following node URLs
 elasticsearch-urls = ["https://volunteery.es.ap-southeast-1.aws.found.io:9243"]
@@ -12,7 +12,7 @@ direct-read-namespaces = ["volunteery-db.opps"]
 
 # Elasticsearch basic auth
 elasticsearch-user = "elastic"
-elasticsearch-password = "nicetry"
+elasticsearch-password = "ES_PASSWORD"
 
 # use 4 go routines concurrently pushing documents to Elasticsearch
 elasticsearch-max-conns = 4
