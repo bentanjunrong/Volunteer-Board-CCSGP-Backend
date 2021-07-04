@@ -5,6 +5,7 @@ import (
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -57,16 +58,14 @@ func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func (o *Opportunity) GetOne(id string) (map[string]interface{}, error) {
-	allOpps, err := db.GetAllByField("opps", map[string]string{"_id": id})
+func (o *Opportunity) GetOne(ctx context.Context, id string) (bson.M, error) {
+	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
 	}
-	var res []map[string]interface{}
-	for _, obj := range allOpps {
-		opp := (obj["_source"]).(map[string]interface{})
-		opp["id"] = obj["_id"]
-		res = append(res, opp)
+	var opp bson.M
+	if err = db.GetCollection("opps").FindOne(ctx, bson.M{"_id": objID}).Decode(&opp); err != nil {
+		return nil, err
 	}
-	return res[0], nil
+	return opp, nil
 }

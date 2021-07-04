@@ -14,7 +14,7 @@ func InitRouter() {
 	router.Use(gin.Recovery())
 	router.Use(cors.Default())
 
-	opp := router.Group("opp")
+	opp := router.Group("opps")
 	{
 		oppController := new(controllers.OppController)
 		opp.GET("", oppController.GetAll)

@@ -45,7 +45,7 @@ func (oppC *OppController) GetAll(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"opportunities": allOpps})
+	c.JSON(http.StatusOK, allOpps)
 }
 
 func (oppC *OppController) Search(c *gin.Context) {
@@ -68,20 +68,21 @@ func (oppC *OppController) Search(c *gin.Context) {
 }
 
 func (oppC *OppController) GetOne(c *gin.Context) {
-	params := c.Request.URL.Query()
-	val, ok := params["id"]
+	id, ok := c.GetQuery("id")
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Did not include id param.",
 		})
 		return
 	}
-	matchedOpp, err := oppModel.GetOne(val[0])
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	opp, err := oppModel.GetOne(ctx, id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"opportunity": matchedOpp})
+	c.JSON(http.StatusOK, opp)
 }
