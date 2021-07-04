@@ -1,0 +1,17 @@
+[Unit]
+Description=Volunteery Backend
+Documentation=https://github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=rajeshbhatrohit
+Group=rajeshbhatrohit
+DynamicUser=yes
+ExecStart=/usr/bin/volunteery
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

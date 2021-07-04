@@ -1,0 +1,17 @@
+[Unit]
+Description=Monstache Service to help sync MongoDB and ES
+Documentation=https://github.com/rwynn/monstache
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=rajeshbhatrohit
+Group=rajeshbhatrohit
+DynamicUser=yes
+ExecStart=/usr/bin/monstache
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
