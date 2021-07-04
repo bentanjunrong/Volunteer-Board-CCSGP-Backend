@@ -6,17 +6,18 @@ Update `ES_PASSWORD` and `DB_URL` in `.env` and `go run .`
 
 1. clone this repo and monstache repo
 2. create systemd services for api (`/usr/bin/volunteery`) and monstache (`/usr/bin/monstache`) - found under `./systemd`
-3. `mkdir /usr/bin/volunteery/volunteery.service.d` and `mkdir /usr/bin/volunteery/monstache.service.d`
+3. `mkdir /usr/bin/volunteery/monstache.service.d`
 4. build and move monstache binary to `/usr/bin/monstache`
 5. update `ES_PASSWORD` and `DB_URL` in `.env`, `chmod +x setup.sh`, `./setup.sh`
 6. build and move volunteery binary: `go build -o volunteery .`, `mv ./volunteery /usr/bin/volunteery`
 7. `systemctl start volunteery`, `systemctl start monstache`
+8. NOTE: current setup reads .env from `/home/rajeshbhatrohit/Volunteer-Board-CCSGP-Backend/.env`!
 
 # Server update
 
 1. clone, update `ES_PASSWORD` and `DB_URL` in `.env`, `chmod +x setup.sh`, `./setup.sh`
 2. update volunteery binary: `go build -o volunteery .`, `mv ./volunteery /usr/bin/volunteery`
-3. `systemctl restart volunteery`, `systemctl restart monstache`
+3. `systemctl restart volunteery`
 
 # Create
 

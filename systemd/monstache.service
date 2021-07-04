@@ -10,8 +10,6 @@ User=rajeshbhatrohit
 Group=rajeshbhatrohit
 DynamicUser=yes
 ExecStart=/usr/bin/monstache -f /etc/systemd/system/monstache.service.d/monstache.toml
-Restart=always
-RestartSec=3
 
 [Install]
 WantedBy=multi-user.target

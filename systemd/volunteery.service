@@ -9,9 +9,9 @@ Type=simple
 User=rajeshbhatrohit
 Group=rajeshbhatrohit
 DynamicUser=yes
-ExecStart=/usr/bin/volunteery
-Restart=always
 RestartSec=3
+WorkingDirectory=/home/rajeshbhatrohit/Volunteer-Board-CCSGP-Backend
+ExecStart=/usr/bin/volunteery
 
 [Install]
 WantedBy=multi-user.target

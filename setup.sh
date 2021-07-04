@@ -12,17 +12,3 @@ sed -i "s|ES_PASSWORD|$ES_PASSWORD|g" monstache.toml
 
 # Copy monstache.toml to systemd directory
 sudo cp monstache.toml /etc/systemd/system/monstache.service.d/monstache.toml
-
-{
-    echo "[Service]"; 
-    grep -v '^#' .env | while read -r line ; do
-        echo "Environment=\"$line\""
-    done
-} | sudo tee /etc/systemd/system/volunteery.service.d/override.conf
-
-{
-    echo "[Service]"; 
-    grep -v '^#' .env | while read -r line ; do
-        echo "Environment=\"$line\""
-    done
-} | sudo tee /etc/systemd/system/monstache.service.d/override.conf
