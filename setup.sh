@@ -7,5 +7,5 @@ grep -v '^#' .env
 export $(grep -v '^#' .env | xargs)
 
 # Update vals in monstache.toml
-sed -i s/DB_PASSWORD/$DB_PASSWORD/g monstache.toml
+sed -i s/DB_URL/$DB_URL/g monstache.toml
 sed -i s/ES_PASSWORD/$ES_PASSWORD/g monstache.toml
