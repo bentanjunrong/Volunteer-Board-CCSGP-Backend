@@ -12,8 +12,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db.InitMongoDB()
-	defer db.DisconnectDB()
 	db.InitDB()
+	defer db.DisconnectDB()
+	db.InitES()
 	InitRouter()
 }
