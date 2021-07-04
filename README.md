@@ -1,12 +1,12 @@
 # Setup
 
-Update `ES_PASSWORD` and `DB_PASSWORD` in `.env` and `go run .`
+Update `ES_PASSWORD` and `DB_URL` in `.env` and `go run .`
 
 # Server setup
 
 1. clone this repo and monstache repo
 2. build and move monstache binary to `/usr/bin`
-3. update `ES_PASSWORD` and `DB_PASSWORD` in `.env`, `chmod +x setup.sh`, `./setup.sh`
+3. update `ES_PASSWORD` and `DB_URL` in `.env`, `chmod +x setup.sh`, `./setup.sh`
 4. build and move volunteery binary: `go build -o volunteery .`, `mv ./volunteery /usr/bin`
 5. create systemd services for backend (`/usr/bin/volunteery`) and monstache (`/usr/bin/monstache`) and start them!
 

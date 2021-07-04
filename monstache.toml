@@ -1,7 +1,7 @@
 # Monstache settings
 
 # connect to MongoDB using the following URL
-mongo-url = "mongodb+srv://admin:DB_PASSWORD@volunteery-db.ppegg.mongodb.net/test"
+mongo-url = "DB_URL"
 
 # connect to the Elasticsearch REST API at the following node URLs
 elasticsearch-urls = ["https://volunteery.es.ap-southeast-1.aws.found.io:9243"]
