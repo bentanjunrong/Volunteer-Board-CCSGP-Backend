@@ -11,13 +11,13 @@ import (
 
 // TODO: abstract these models such like in https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/model/model.go
 type Opportunity struct {
-	Name             string   `json:"name" bson:"name,omitempty" binding:"required"`
-	Description      string   `json:"description" bson:"description,omitempty" binding:"required"`
-	OrganisationName string   `json:"organisation_name" bson:"organisation_name,omitempty" binding:"required"`
-	AgeRequirement   int16    `json:"age_requirement" bson:"age_requirement,omitempty" binding:"required"`
-	Location         string   `json:"location" bson:"location,omitempty" binding:"required"`
-	PostingDate      string   `json:"posting_date" bson:"posting_date,omitempty" binding:"required"`
-	Shifts           []Shift  `json:"shifts"  bson:"shifts,omitempty" binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
+	Name             string   `json:"name" bson:"name" binding:"required"`
+	Description      string   `json:"description" bson:"description" binding:"required"`
+	OrganisationName string   `json:"organisation_name" bson:"organisation_name" binding:"required"`
+	AgeRequirement   int16    `json:"age_requirement" bson:"age_requirement" binding:"required"`
+	Location         string   `json:"location" bson:"location" binding:"required"`
+	PostingDate      string   `json:"posting_date" bson:"posting_date" binding:"required"`
+	Shifts           []Shift  `json:"shifts"  bson:"shifts" binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
 	Causes           []string `json:"causes" bson:"causes" `
 	IsApproved       bool     `json:"is_approved" bson:"is_approved" `
 	CreatedAt        string   `json:"created_at" bson:"created_at" `
@@ -77,4 +77,19 @@ func (o *Opportunity) GetOne(ctx context.Context, id string) (bson.M, error) {
 		return nil, err
 	}
 	return opp, nil
+}
+
+func (o *Opportunity) CreateShift(ctx context.Context, id string, shift Shift) error {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	_, err = db.GetCollection("opps").UpdateOne(
+		ctx,
+		bson.M{"_id": objID},
+		bson.M{
+			"$push": bson.M{"shifts": shift},
+		},
+	)
+	return err
 }

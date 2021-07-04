@@ -21,6 +21,7 @@ func InitRouter() {
 		opp.POST("", oppController.Create)
 		opp.GET("/search", oppController.Search)
 		opp.GET("/:id", oppController.GetOne)
+		opp.POST("/:id/shifts", oppController.CreateShift)
 	}
 
 	// health check route for the LB

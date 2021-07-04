@@ -22,7 +22,7 @@ func (oppC *OppController) Create(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // can move these to models!
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // TODO: can move these to models!
 	defer cancel()
 	oppID, err := oppModel.Create(ctx, opp)
 	if err != nil {
@@ -79,4 +79,26 @@ func (oppC *OppController) GetOne(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, opp)
+}
+
+func (oppC *OppController) CreateShift(c *gin.Context) {
+	id := c.Param("id")
+	var shift models.Shift
+	if err := c.ShouldBindJSON(&shift); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := oppModel.CreateShift(ctx, id, shift); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.String(http.StatusOK, "success.")
 }
