@@ -6,23 +6,28 @@ import (
 	"log"
 	"strings"
 
-	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/utils"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 )
 
+type AcceptedOpportunity struct {
+	OppID    string   `json:"opp_id" bson:"opp_id" binding:"required"`
+	ShiftIDs []string `json:"shift_ids" bson:"shift_ids" binding:"required"`
+}
+
 type User struct {
-	Name              string   `json:"name" binding:"required"`
-	Email             string   `json:"email" binding:"required"`
-	Password          string   `json:"password" binding:"required"`
-	DateOfBirth       string   `json:"date_of_birth"`
-	Gender            string   `json:"gender"`
-	Age               int16    `json:"age"`
-	Availability      []string `json:"availability"`
-	SMSNotification   bool     `json:"sms_notification"`
-	EmailNotification bool     `json:"email_notification"`
-	CreatedAt         string   `json:"created_at"`
-	UpdatedAt         string   `json:"updated_at"`
+	Name                  string                `json:"name" bson:"name" binding:"required"`
+	Email                 string                `json:"email" bson:"email" binding:"required"`
+	Password              string                `json:"password" bson:"password" binding:"required"`
+	DateOfBirth           string                `json:"date_of_birth" bson:"date_of_birth"`
+	Gender                string                `json:"gender" bson:"gender"`
+	Age                   int16                 `json:"age" bson:"age"`
+	Availability          []string              `json:"availability" bson:"availability"`
+	AcceptedOpportunities []AcceptedOpportunity `json:"accepted_opportunities" bson:"accepted_opportunities"`
+	SMSNotification       bool                  `json:"sms_notification" bson:"sms_notification"`
+	EmailNotification     bool                  `json:"email_notification" bson:"email_notification"`
+	CreatedAt             string                `json:"created_at" bson:"created_at"`
+	UpdatedAt             string                `json:"updated_at" bson:"updated_at"`
 }
 
 func (u *User) Create(user User) (User, error) {
