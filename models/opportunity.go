@@ -25,6 +25,9 @@ type Opportunity struct {
 }
 
 func (o *Opportunity) Create(ctx context.Context, opp Opportunity) (interface{}, error) {
+	for i := 0; i < len(opp.Shifts); i++ {
+		opp.Shifts[i].ID = primitive.NewObjectID()
+	}
 	result, err := db.GetCollection("opps").InsertOne(ctx, opp)
 	if err != nil {
 		return "", err
@@ -80,6 +83,7 @@ func (o *Opportunity) GetOne(ctx context.Context, id string) (bson.M, error) {
 }
 
 func (o *Opportunity) CreateShift(ctx context.Context, id string, shift Shift) error {
+	shift.ID = primitive.NewObjectID()
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
