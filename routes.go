@@ -32,6 +32,12 @@ func InitRouter() {
 		opps.DELETE("/:id/shifts/:shift_id", oppController.DeleteShift)
 	}
 
+	admins := router.Group("admins")
+	{
+		adminController := new(controllers.AdminController)
+		admins.PUT("/approve/:opp_id", adminController.Approve)
+	}
+
 	// health check route for the LB
 	router.GET("/health-check", func(c *gin.Context) {
 		c.JSON(200, gin.H{
