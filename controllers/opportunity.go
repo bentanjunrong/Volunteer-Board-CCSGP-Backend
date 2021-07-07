@@ -102,3 +102,15 @@ func (oppC *OppController) CreateShift(c *gin.Context) {
 
 	c.String(http.StatusOK, "success.")
 }
+
+func (oppC *OppController) DeleteShift(c *gin.Context) {
+	oppID := c.Param("id")
+	shiftID := c.Param("shift_id")
+	if err := oppModel.DeleteShift(oppID, shiftID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.String(http.StatusOK, "success.")
+}

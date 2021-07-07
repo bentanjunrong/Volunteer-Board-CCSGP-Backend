@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"time"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
 	"go.mongodb.org/mongo-driver/bson"
@@ -96,4 +97,68 @@ func (o *Opportunity) CreateShift(ctx context.Context, id string, shift Shift) e
 		},
 	)
 	return err
+}
+
+// TODO: improve this garbage function.
+// TODO: return error if shift not found.
+func (o *Opportunity) DeleteShift(oppID string, shiftID string) error {
+	oppId, err := primitive.ObjectIDFromHex(oppID)
+	if err != nil {
+		return err
+	}
+	shiftId, err := primitive.ObjectIDFromHex(shiftID)
+	if err != nil {
+		return err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	opp := &Opportunity{}
+	if err = db.GetCollection("opps").FindOne(ctx, bson.M{"_id": oppId}).Decode(&opp); err != nil {
+		return err
+	}
+
+	for _, shift := range opp.Shifts {
+		// find shift
+		if shift.ID == shiftId {
+			// for each accepted user, remove shiftId from their accepted_opps
+			for _, acceptedUserId := range shift.AcceptedUsers {
+				userId, err := primitive.ObjectIDFromHex(acceptedUserId)
+				if err != nil {
+					return err
+				}
+				user := &User{}
+				if err = db.GetCollection("users").FindOne(ctx, bson.M{"_id": userId}).Decode(&user); err != nil {
+					return err
+				}
+				for i := 0; i < len(user.AcceptedOpportunities); i++ {
+					if user.AcceptedOpportunities[i].OppID == oppID {
+						acceptedOpp := user.AcceptedOpportunities[i]
+						for j := 0; j < len(acceptedOpp.ShiftIDs); j++ {
+							// remove shiftId
+							if acceptedOpp.ShiftIDs[j] == shiftID {
+								user.AcceptedOpportunities[i].ShiftIDs = append(acceptedOpp.ShiftIDs[:j], acceptedOpp.ShiftIDs[j+1:]...)
+								break
+							}
+						}
+						break
+					}
+				}
+				// update user
+				if _, err = db.GetCollection("users").ReplaceOne(ctx, bson.M{"_id": userId}, user); err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	// delete shift
+	for i := 0; i < len(opp.Shifts); i++ {
+		if opp.Shifts[i].ID == shiftId {
+			opp.Shifts = append(opp.Shifts[:i], opp.Shifts[i+1:]...)
+			break
+		}
+	}
+
+	return nil
 }
