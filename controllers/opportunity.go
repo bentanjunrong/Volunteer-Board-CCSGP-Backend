@@ -48,6 +48,17 @@ func (oppC *OppController) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, allOpps)
 }
 
+func (oppC *OppController) GetAllUnapproved(c *gin.Context) {
+	allOpps, err := oppModel.GetAllUnapproved()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, allOpps)
+}
+
 func (oppC *OppController) Search(c *gin.Context) {
 	params := c.Request.URL.Query()
 	val, ok := params["query"]
