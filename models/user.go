@@ -61,3 +61,39 @@ func (u *User) GetOpps(userID string) ([]bson.M, error) {
 	}
 	return opps, nil
 }
+
+func (u *User) ApplyOpp(userID string, oppID string, shiftIDs []string) error {
+	userId, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	user := &User{}
+	if err = db.GetCollection("users").FindOne(ctx, bson.M{"_id": userId}).Decode(&user); err != nil {
+		return err
+	}
+
+	added := false
+	for i := 0; i < len(user.AcceptedOpportunities); i++ {
+		if user.AcceptedOpportunities[i].OppID == oppID {
+			user.AcceptedOpportunities[i].ShiftIDs = shiftIDs
+			added = true
+			break
+		}
+	}
+
+	if !added {
+		user.AcceptedOpportunities = append(user.AcceptedOpportunities, AcceptedOpportunity{
+			OppID:    oppID,
+			ShiftIDs: shiftIDs,
+		})
+	}
+
+	if _, err = db.GetCollection("users").ReplaceOne(ctx, bson.M{"_id": userId}, user); err != nil {
+		return err
+	}
+
+	return nil
+}

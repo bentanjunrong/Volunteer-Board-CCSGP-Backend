@@ -22,3 +22,26 @@ func (userC *UserController) GetOpps(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, opps)
 }
+
+func (userC *UserController) ApplyOpp(c *gin.Context) {
+	userID := c.Param("id")
+	oppID := c.Param("opp_id")
+	reqBody := struct {
+		ShiftIDs []string `json:"shift_ids" bson:"shift_ids" binding:"required"`
+	}{}
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := userModel.ApplyOpp(userID, oppID, reqBody.ShiftIDs); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.String(http.StatusOK, "success.")
+}
