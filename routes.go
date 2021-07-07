@@ -14,15 +14,15 @@ func InitRouter() {
 	router.Use(gin.Recovery())
 	router.Use(cors.Default())
 
-	opp := router.Group("opps")
+	opps := router.Group("opps")
 	{
 		oppController := new(controllers.OppController)
-		opp.GET("", oppController.GetAll)
-		opp.POST("", oppController.Create)
-		opp.GET("/search", oppController.Search)
-		opp.GET("/:id", oppController.GetOne)
-		opp.POST("/:id/shifts", oppController.CreateShift)
-		opp.DELETE("/:id/shifts/:shift_id", oppController.DeleteShift)
+		opps.GET("", oppController.GetAll)
+		opps.POST("", oppController.Create)
+		opps.GET("/search", oppController.Search)
+		opps.GET("/:id", oppController.GetOne)
+		opps.POST("/:id/shifts", oppController.CreateShift)
+		opps.DELETE("/:id/shifts/:shift_id", oppController.DeleteShift)
 	}
 
 	// health check route for the LB
