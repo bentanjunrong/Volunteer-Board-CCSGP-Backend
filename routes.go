@@ -14,6 +14,12 @@ func InitRouter() {
 	router.Use(gin.Recovery())
 	router.Use(cors.Default())
 
+	users := router.Group("users")
+	{
+		userController := new(controllers.UserController)
+		users.GET("/:id/opps", userController.GetOpps)
+	}
+
 	opps := router.Group("opps")
 	{
 		oppController := new(controllers.OppController)
