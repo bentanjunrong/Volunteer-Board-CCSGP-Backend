@@ -36,15 +36,17 @@ func (o *Opportunity) Create(ctx context.Context, opp Opportunity) (interface{},
 	return result.InsertedID, nil
 }
 
-func (o *Opportunity) GetAll(ctx context.Context) ([]bson.M, error) {
+func (o *Opportunity) GetAll() ([]bson.M, error) {
 	projection := bson.M{
 		"description":     0,
 		"shifts":          0,
 		"age_requirement": 0,
 	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	cursor, err := db.GetCollection("opps").Find(
 		ctx,
-		bson.M{},
+		bson.M{"is_approved": true},
 		options.Find().SetProjection(projection),
 	)
 	if err != nil {
