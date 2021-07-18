@@ -22,9 +22,7 @@ func (oppC *OppController) Create(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // TODO: can move these to models!
-	defer cancel()
-	oppID, err := oppModel.Create(ctx, opp)
+	oppID, err := oppModel.Create(opp)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
