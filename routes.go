@@ -37,6 +37,7 @@ func InitRouter() {
 	{
 		adminController := new(controllers.AdminController)
 		admins.PUT("/approve/:opp_id", adminController.Approve)
+		admins.PUT("/reject/:opp_id", adminController.Reject)
 	}
 
 	// health check route for the LB

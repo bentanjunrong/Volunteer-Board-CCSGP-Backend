@@ -30,3 +30,24 @@ func (a *Admin) Approve(id string) error {
 
 	return nil
 }
+
+func (a *Admin) Reject(id string, rejReason string) error {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	opp := &Opportunity{}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err = db.GetCollection("opps").FindOne(ctx, bson.M{"_id": objID}).Decode(&opp); err != nil {
+		return err
+	}
+
+	opp.Status = "rejected"
+	opp.RejectionReason = rejReason
+	if _, err = db.GetCollection("opps").ReplaceOne(ctx, bson.M{"_id": objID}, opp); err != nil {
+		return err
+	}
+
+	return nil
+}
