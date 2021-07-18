@@ -13,7 +13,7 @@ var adminModel = new(models.Admin)
 
 func (adminC *AdminController) Approve(c *gin.Context) {
 	oppID := c.Param("opp_id")
-	if err := adminModel.Apply(oppID); err != nil {
+	if err := adminModel.Approve(oppID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

@@ -11,7 +11,7 @@ import (
 
 type Admin struct{}
 
-func (a *Admin) Apply(id string) error {
+func (a *Admin) Approve(id string) error {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
