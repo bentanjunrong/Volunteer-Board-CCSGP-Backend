@@ -95,24 +95,30 @@ func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func (o *Opportunity) GetOne(ctx context.Context, id string) (bson.M, error) {
+func (o *Opportunity) GetOne(id string) (bson.M, error) {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
 	}
 	var opp bson.M
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	if err = db.GetCollection("opps").FindOne(ctx, bson.M{"_id": objID}).Decode(&opp); err != nil {
 		return nil, err
 	}
 	return opp, nil
 }
 
-func (o *Opportunity) CreateShift(ctx context.Context, id string, shift Shift) error {
+func (o *Opportunity) CreateShift(id string, shift Shift) error {
 	shift.ID = primitive.NewObjectID()
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	_, err = db.GetCollection("opps").UpdateOne(
 		ctx,
 		bson.M{"_id": objID},

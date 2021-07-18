@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"context"
 	"net/http"
-	"time"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/models"
 	"github.com/gin-gonic/gin"
@@ -76,9 +74,8 @@ func (oppC *OppController) Search(c *gin.Context) {
 
 func (oppC *OppController) GetOne(c *gin.Context) {
 	id := c.Param("id")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	opp, err := oppModel.GetOne(ctx, id)
+
+	opp, err := oppModel.GetOne(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -98,9 +95,7 @@ func (oppC *OppController) CreateShift(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := oppModel.CreateShift(ctx, id, shift); err != nil {
+	if err := oppModel.CreateShift(id, shift); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
