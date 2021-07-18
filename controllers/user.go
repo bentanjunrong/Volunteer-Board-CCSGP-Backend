@@ -45,3 +45,24 @@ func (userC *UserController) ApplyOpp(c *gin.Context) {
 
 	c.String(http.StatusOK, "success.")
 }
+
+func (userC *UserController) Update(c *gin.Context) {
+	userID := c.Param("id")
+	var user models.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	updatedUser, err := userModel.Update(userID, user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedUser)
+}
