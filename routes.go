@@ -43,6 +43,12 @@ func InitRouter() {
 		admins.PUT("/:id", adminController.Update)
 	}
 
+	orgs := router.Group("orgs")
+	{
+		orgController := new(controllers.OrgController)
+		orgs.PUT("/:id", orgController.Update)
+	}
+
 	// health check route for the LB
 	router.GET("/health-check", func(c *gin.Context) {
 		c.JSON(200, gin.H{

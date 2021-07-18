@@ -1,5 +1,16 @@
 package models
 
+import (
+	"context"
+	"time"
+
+	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
+	"github.com/jinzhu/copier"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
 type Organisation struct {
 	Name          string        `json:"name" binding:"required"`
 	Email         string        `json:"email" binding:"required"`
@@ -11,4 +22,30 @@ type Organisation struct {
 	Opportunities []Opportunity `json:"opportunities"`
 	CreatedAt     string        `json:"created_at"`
 	UpdatedAt     string        `json:"updated_at"`
+}
+
+func (o *Organisation) Update(orgID string, orgUpdate Organisation) (Organisation, error) {
+	orgId, err := primitive.ObjectIDFromHex(orgID)
+	if err != nil {
+		return Organisation{}, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	org := &Organisation{}
+	if err = db.GetCollection("orgs").FindOne(ctx, bson.M{"_id": orgId}).Decode(&org); err != nil {
+		return Organisation{}, err
+	}
+
+	if err := copier.Copy(org, orgUpdate); err != nil {
+		return Organisation{}, err
+	}
+
+	returnUpdatedDoc := options.After
+	opts := &options.FindOneAndUpdateOptions{
+		ReturnDocument: &returnUpdatedDoc,
+	}
+	err = db.GetCollection("orgs").FindOneAndUpdate(ctx, bson.M{"_id": orgId}, bson.M{"$set": org}, opts).Decode(&org)
+
+	return *org, nil
 }
