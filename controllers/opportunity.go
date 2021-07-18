@@ -116,3 +116,24 @@ func (oppC *OppController) DeleteShift(c *gin.Context) {
 	}
 	c.String(http.StatusOK, "success.")
 }
+
+func (oppC *OppController) Update(c *gin.Context) {
+	oppID := c.Param("id")
+	var opp models.Opportunity
+	if err := c.ShouldBindJSON(&opp); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	updatedOpp, err := oppModel.Update(oppID, opp)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedOpp)
+}

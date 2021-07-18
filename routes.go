@@ -32,6 +32,7 @@ func InitRouter() {
 		opps.GET("/:id", oppController.GetOne)
 		opps.POST("/:id/shifts", oppController.CreateShift)
 		opps.DELETE("/:id/shifts/:shift_id", oppController.DeleteShift)
+		opps.PUT("/:id", oppController.Update)
 	}
 
 	admins := router.Group("admins")

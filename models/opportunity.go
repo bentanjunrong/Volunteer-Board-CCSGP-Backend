@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
+	"github.com/jinzhu/copier"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -191,4 +192,30 @@ func (o *Opportunity) DeleteShift(oppID string, shiftID string) error {
 	}
 
 	return nil
+}
+
+func (o *Opportunity) Update(oppID string, oppUpdate Opportunity) (Opportunity, error) {
+	oppId, err := primitive.ObjectIDFromHex(oppID)
+	if err != nil {
+		return Opportunity{}, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	opp := &Opportunity{}
+	if err = db.GetCollection("opps").FindOne(ctx, bson.M{"_id": oppId}).Decode(&opp); err != nil {
+		return Opportunity{}, err
+	}
+
+	if err := copier.Copy(opp, oppUpdate); err != nil {
+		return Opportunity{}, err
+	}
+
+	returnUpdatedDoc := options.After
+	opts := &options.FindOneAndUpdateOptions{
+		ReturnDocument: &returnUpdatedDoc,
+	}
+	err = db.GetCollection("opps").FindOneAndUpdate(ctx, bson.M{"_id": oppId}, bson.M{"$set": opp}, opts).Decode(&opp)
+
+	return *opp, nil
 }
