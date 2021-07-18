@@ -19,10 +19,11 @@ type Opportunity struct {
 	Location         string   `json:"location" bson:"location" binding:"required"`
 	PostingDate      string   `json:"posting_date" bson:"posting_date" binding:"required"`
 	Shifts           []Shift  `json:"shifts"  bson:"shifts" binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
-	Causes           []string `json:"causes" bson:"causes" `
-	IsApproved       bool     `json:"is_approved" bson:"is_approved" `
-	CreatedAt        string   `json:"created_at" bson:"created_at" `
-	UpdatedAt        string   `json:"updated_at" bson:"updated_at" `
+	Causes           []string `json:"causes" bson:"causes"`
+	Status           string   `json:"status" bson:"status"`
+	RejectionReason  string   `json:"rejection_reason" bson:"rejection_reason"`
+	CreatedAt        string   `json:"created_at" bson:"created_at"`
+	UpdatedAt        string   `json:"updated_at" bson:"updated_at"`
 }
 
 func (o *Opportunity) Create(ctx context.Context, opp Opportunity) (interface{}, error) {
@@ -46,7 +47,7 @@ func (o *Opportunity) GetAll() ([]bson.M, error) {
 	defer cancel()
 	cursor, err := db.GetCollection("opps").Find(
 		ctx,
-		bson.M{"is_approved": true},
+		bson.M{"status": "approved"},
 		options.Find().SetProjection(projection),
 	)
 	if err != nil {
@@ -59,12 +60,12 @@ func (o *Opportunity) GetAll() ([]bson.M, error) {
 	return opps, nil
 }
 
-func (o *Opportunity) GetAllUnapproved() ([]bson.M, error) {
+func (o *Opportunity) GetAllPending() ([]bson.M, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	cursor, err := db.GetCollection("opps").Find(
 		ctx,
-		bson.M{"is_approved": false},
+		bson.M{"status": "pending"},
 	)
 	if err != nil {
 		return nil, err

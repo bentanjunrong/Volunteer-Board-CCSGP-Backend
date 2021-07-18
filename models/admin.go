@@ -23,7 +23,7 @@ func (a *Admin) Apply(id string) error {
 		return err
 	}
 
-	opp.IsApproved = true
+	opp.Status = "approved"
 	if _, err = db.GetCollection("opps").ReplaceOne(ctx, bson.M{"_id": objID}, opp); err != nil {
 		return err
 	}
