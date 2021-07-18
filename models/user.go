@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"github.com/bentanjunrong/Volunteer-Board-CCSGP-Backend/db"
+	"github.com/jinzhu/copier"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type AcceptedOpportunity struct {
@@ -96,4 +98,30 @@ func (u *User) ApplyOpp(userID string, oppID string, shiftIDs []string) error {
 	}
 
 	return nil
+}
+
+func (u *User) Update(userID string, userUpdate User) (User, error) {
+	userId, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return User{}, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	user := &User{}
+	if err = db.GetCollection("users").FindOne(ctx, bson.M{"_id": userId}).Decode(&user); err != nil {
+		return User{}, err
+	}
+
+	if err := copier.Copy(user, userUpdate); err != nil {
+		return User{}, err
+	}
+
+	returnUpdatedDoc := options.After
+	opts := &options.FindOneAndUpdateOptions{
+		ReturnDocument: &returnUpdatedDoc,
+	}
+	err = db.GetCollection("users").FindOneAndUpdate(ctx, bson.M{"_id": userId}, bson.M{"$set": user}, opts).Decode(&user)
+
+	return *user, nil
 }
