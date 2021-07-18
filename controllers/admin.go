@@ -42,3 +42,24 @@ func (adminC *AdminController) Reject(c *gin.Context) {
 	}
 	c.String(http.StatusOK, "success.")
 }
+
+func (adminC *AdminController) Update(c *gin.Context) {
+	adminID := c.Param("id")
+	var admin models.Admin
+	if err := c.ShouldBindJSON(&admin); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	updatedAdmin, err := adminModel.Update(adminID, admin)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedAdmin)
+}
