@@ -42,6 +42,17 @@ func (oppC *OppController) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, allOpps)
 }
 
+func (oppC *OppController) GetAllApproved(c *gin.Context) {
+	allOpps, err := oppModel.GetAllApproved()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, allOpps)
+}
+
 func (oppC *OppController) GetAllPending(c *gin.Context) {
 	allOpps, err := oppModel.GetAllPending()
 	if err != nil {

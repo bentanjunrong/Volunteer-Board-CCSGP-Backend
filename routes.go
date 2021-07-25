@@ -27,6 +27,7 @@ func InitRouter() {
 	{
 		oppController := new(controllers.OppController)
 		opps.GET("", oppController.GetAll)
+		opps.GET("/approved", oppController.GetAllApproved)
 		opps.GET("/pending", oppController.GetAllPending)
 		opps.POST("", oppController.Create)
 		opps.GET("/search", oppController.Search)

@@ -52,7 +52,24 @@ func (o *Opportunity) isVacant(opp Opportunity) bool {
 	return false
 }
 
-func (o *Opportunity) GetAll() ([]Opportunity, error) {
+func (o *Opportunity) GetAll() ([]bson.M, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	cursor, err := db.GetCollection("opps").Find(
+		ctx,
+		bson.M{},
+	)
+	if err != nil {
+		return nil, err
+	}
+	var opps []bson.M
+	if err = cursor.All(ctx, &opps); err != nil {
+		return nil, err
+	}
+	return opps, nil
+}
+
+func (o *Opportunity) GetAllApproved() ([]Opportunity, error) {
 	projection := bson.M{
 		"description":     0,
 		"age_requirement": 0,
