@@ -45,7 +45,6 @@ func (o *Opportunity) Create(opp Opportunity) (interface{}, error) {
 func (o *Opportunity) GetAll() ([]bson.M, error) {
 	projection := bson.M{
 		"description":     0,
-		"shifts":          0,
 		"age_requirement": 0,
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
