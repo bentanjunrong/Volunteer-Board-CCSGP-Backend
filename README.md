@@ -1,6 +1,6 @@
 # Setup
 
-Update `ES_PASSWORD` and `DB_URL` in `.env` and `go run .`
+Update `ES_PASSWORD` and `DB_URL` and  `ES_URL` in `.env` and `go run .`
 
 # Server setup
 
