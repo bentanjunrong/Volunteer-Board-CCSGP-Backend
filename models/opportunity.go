@@ -42,7 +42,16 @@ func (o *Opportunity) Create(opp Opportunity) (interface{}, error) {
 	return result.InsertedID, nil
 }
 
-func (o *Opportunity) GetAll() ([]bson.M, error) {
+func (o *Opportunity) isVacant(opp Opportunity) bool {
+	for _, shift := range opp.Shifts {
+		if len(shift.AcceptedUsers) < int(shift.Vacancies) {
+			return true
+		}
+	}
+	return false
+}
+
+func (o *Opportunity) GetAll() ([]Opportunity, error) {
 	projection := bson.M{
 		"description":     0,
 		"age_requirement": 0,
@@ -57,11 +66,18 @@ func (o *Opportunity) GetAll() ([]bson.M, error) {
 	if err != nil {
 		return nil, err
 	}
-	var opps []bson.M
+	var opps []Opportunity // TODO: cghange all var arr declarations to create an emnpty slice to avoid returning null to frontend
 	if err = cursor.All(ctx, &opps); err != nil {
 		return nil, err
 	}
-	return opps, nil
+	// remove all opps with no vacant slots
+	vacantOpps := []Opportunity{}
+	for _, opp := range opps {
+		if o.isVacant(opp) {
+			vacantOpps = append(vacantOpps, opp)
+		}
+	}
+	return vacantOpps, nil
 }
 
 func (o *Opportunity) GetAllPending() ([]bson.M, error) {
