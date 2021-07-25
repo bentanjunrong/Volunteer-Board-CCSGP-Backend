@@ -43,6 +43,17 @@ func (adminC *AdminController) Reject(c *gin.Context) {
 	c.String(http.StatusOK, "success.")
 }
 
+func (adminC *AdminController) Undo(c *gin.Context) {
+	oppID := c.Param("opp_id")
+	if err := adminModel.Undo(oppID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.String(http.StatusOK, "success.")
+}
+
 func (adminC *AdminController) Update(c *gin.Context) {
 	adminID := c.Param("id")
 	var admin models.Admin

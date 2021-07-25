@@ -42,6 +42,7 @@ func InitRouter() {
 		adminController := new(controllers.AdminController)
 		admins.PUT("/approve/:opp_id", adminController.Approve)
 		admins.PUT("/reject/:opp_id", adminController.Reject)
+		admins.PUT("/undo/:opp_id", adminController.Undo)
 		admins.PUT("/:id", adminController.Update)
 	}
 
