@@ -3,7 +3,7 @@ package models
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Shift struct {
-	ID                    primitive.ObjectID `bson:"_id"`
+	ID                    primitive.ObjectID `json:"_id" bson:"_id"`
 	Date                  string             `json:"date" bson:"date" binding:"required"`
 	StartTime             string             `json:"start_time" bson:"start_time" binding:"required"`
 	EndTime               string             `json:"end_time" bson:"end_time" binding:"required"`

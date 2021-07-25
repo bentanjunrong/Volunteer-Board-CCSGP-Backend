@@ -13,18 +13,19 @@ import (
 
 // TODO: abstract these models such like in https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/model/model.go
 type Opportunity struct {
-	Name             string   `json:"name" bson:"name" binding:"required"`
-	Description      string   `json:"description" bson:"description" binding:"required"`
-	OrganisationName string   `json:"organisation_name" bson:"organisation_name" binding:"required"`
-	AgeRequirement   int16    `json:"age_requirement" bson:"age_requirement" binding:"required"`
-	Location         string   `json:"location" bson:"location" binding:"required"`
-	PostingDate      string   `json:"posting_date" bson:"posting_date" binding:"required"`
-	Shifts           []Shift  `json:"shifts"  bson:"shifts" binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
-	Causes           []string `json:"causes" bson:"causes"`
-	Status           string   `json:"status" bson:"status"` // TODO: might want to consider changing this to three booleanss
-	RejectionReason  string   `json:"rejection_reason" bson:"rejection_reason"`
-	CreatedAt        string   `json:"created_at" bson:"created_at"`
-	UpdatedAt        string   `json:"updated_at" bson:"updated_at"`
+	ID               primitive.ObjectID `json:"_id" bson:"_id"`
+	Name             string             `json:"name" bson:"name" binding:"required"`
+	Description      string             `json:"description" bson:"description" binding:"required"`
+	OrganisationName string             `json:"organisation_name" bson:"organisation_name" binding:"required"`
+	AgeRequirement   int16              `json:"age_requirement" bson:"age_requirement" binding:"required"`
+	Location         string             `json:"location" bson:"location" binding:"required"`
+	PostingDate      string             `json:"posting_date" bson:"posting_date" binding:"required"`
+	Shifts           []Shift            `json:"shifts"  bson:"shifts" binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
+	Causes           []string           `json:"causes" bson:"causes"`
+	Status           string             `json:"status" bson:"status"` // TODO: might want to consider changing this to three booleanss
+	RejectionReason  string             `json:"rejection_reason" bson:"rejection_reason"`
+	CreatedAt        string             `json:"created_at" bson:"created_at"`
+	UpdatedAt        string             `json:"updated_at" bson:"updated_at"`
 }
 
 func (o *Opportunity) Create(opp Opportunity) (interface{}, error) {
