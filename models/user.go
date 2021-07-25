@@ -20,13 +20,13 @@ type User struct {
 	ID                    primitive.ObjectID    `json:"_id" bson:"_id"`
 	Name                  string                `json:"name" bson:"name" binding:"required"`
 	Email                 string                `json:"email" bson:"email" binding:"required"`
-	Password              string                `json:"password" bson:"password" binding:"required"`
-	DateOfBirth           string                `json:"date_of_birth" bson:"date_of_birth"`
-	Gender                string                `json:"gender" bson:"gender"`
-	Availability          []string              `json:"availability" bson:"availability"`
+	Password              string                `json:"password" bson:"password"`
+	DateOfBirth           string                `json:"date_of_birth" bson:"date_of_birth" binding:"required"`
+	Gender                string                `json:"gender" bson:"gender" binding:"required"`
+	Availabilities        []string              `json:"availabilities" bson:"availabilities" binding:"required"`
 	AcceptedOpportunities []AcceptedOpportunity `json:"accepted_opps" bson:"accepted_opps"`
-	SMSNotification       bool                  `json:"sms_notification" bson:"sms_notification"`
-	EmailNotification     bool                  `json:"email_notification" bson:"email_notification"`
+	SMSNotification       bool                  `json:"sms_notification" bson:"sms_notification" binding:"required"`
+	EmailNotification     bool                  `json:"email_notification" bson:"email_notification" binding:"required"`
 	CreatedAt             string                `json:"created_at" bson:"created_at"`
 	UpdatedAt             string                `json:"updated_at" bson:"updated_at"`
 }
