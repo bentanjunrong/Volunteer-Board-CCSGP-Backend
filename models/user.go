@@ -22,7 +22,6 @@ type User struct {
 	Password              string                `json:"password" bson:"password" binding:"required"`
 	DateOfBirth           string                `json:"date_of_birth" bson:"date_of_birth"`
 	Gender                string                `json:"gender" bson:"gender"`
-	Age                   int16                 `json:"age" bson:"age"`
 	Availability          []string              `json:"availability" bson:"availability"`
 	AcceptedOpportunities []AcceptedOpportunity `json:"accepted_opps" bson:"accepted_opps"`
 	SMSNotification       bool                  `json:"sms_notification" bson:"sms_notification"`
@@ -42,7 +41,7 @@ func (u *User) GetOpps(userID string) ([]bson.M, error) {
 	if err = db.GetCollection("users").FindOne(ctx, bson.M{"_id": objID}).Decode(&user); err != nil {
 		return nil, err
 	}
-	var oppIDs []primitive.ObjectID
+	oppIDs := bson.A{}
 	for _, acceptedOpp := range user.AcceptedOpportunities {
 		oppId, err := primitive.ObjectIDFromHex(acceptedOpp.OppID)
 		if err != nil {
