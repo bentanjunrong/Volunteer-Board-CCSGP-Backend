@@ -4,7 +4,7 @@
 mongo-url = "DB_URL"
 
 # connect to the Elasticsearch REST API at the following node URLs
-elasticsearch-urls = ["https://volunteery.es.ap-southeast-1.aws.found.io:9243"]
+elasticsearch-urls = ["ES_URL"]
 
 # if you need to seed an index from a collection and not just listen and sync changes events
 # you can copy entire collections or views from MongoDB to Elasticsearch
