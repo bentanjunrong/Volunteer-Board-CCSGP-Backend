@@ -21,7 +21,7 @@ type Opportunity struct {
 	PostingDate      string   `json:"posting_date" bson:"posting_date" binding:"required"`
 	Shifts           []Shift  `json:"shifts"  bson:"shifts" binding:"required"` // TODO: this validation not working. fix here: https://stackoverflow.com/questions/58585078/binding-validations-does-not-work-when-request-body-is-array-of-objects
 	Causes           []string `json:"causes" bson:"causes"`
-	Status           string   `json:"status" bson:"status"`
+	Status           string   `json:"status" bson:"status"` // TODO: might want to consider changing this to three booleanss
 	RejectionReason  string   `json:"rejection_reason" bson:"rejection_reason"`
 	CreatedAt        string   `json:"created_at" bson:"created_at"`
 	UpdatedAt        string   `json:"updated_at" bson:"updated_at"`
@@ -209,6 +209,8 @@ func (o *Opportunity) Update(oppID string, oppUpdate Opportunity) (Opportunity, 
 	if err := copier.Copy(opp, oppUpdate); err != nil {
 		return Opportunity{}, err
 	}
+
+	opp.Status = "pending"
 
 	returnUpdatedDoc := options.After
 	opts := &options.FindOneAndUpdateOptions{

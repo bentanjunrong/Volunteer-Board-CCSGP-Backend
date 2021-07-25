@@ -117,7 +117,7 @@ func (oppC *OppController) DeleteShift(c *gin.Context) {
 	c.String(http.StatusOK, "success.")
 }
 
-func (oppC *OppController) Update(c *gin.Context) {
+func (oppC *OppController) Update(c *gin.Context) { // TODO: only allow updates to certain fields!
 	oppID := c.Param("id")
 	var opp models.Opportunity
 	if err := c.ShouldBindJSON(&opp); err != nil {
