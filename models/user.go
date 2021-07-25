@@ -124,3 +124,22 @@ func (u *User) Update(userID string, userUpdate User) (User, error) {
 
 	return *user, nil
 }
+
+func (u *User) GetOne(id string) (bson.M, error) {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	user := bson.M{}
+	if err = db.GetCollection("users").FindOne(
+		ctx,
+		bson.M{"_id": objID},
+		options.FindOne().SetProjection(bson.M{"password": 0}),
+	).Decode(&user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}

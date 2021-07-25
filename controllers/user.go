@@ -66,3 +66,16 @@ func (userC *UserController) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, updatedUser)
 }
+
+func (userC *UserController) GetOne(c *gin.Context) {
+	id := c.Param("id")
+
+	user, err := userModel.GetOne(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, user)
+}

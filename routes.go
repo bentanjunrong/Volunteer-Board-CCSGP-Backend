@@ -20,6 +20,7 @@ func InitRouter() {
 		users.GET("/:id/opps", userController.GetOpps)
 		users.PUT("/:id/apply/:opp_id", userController.ApplyOpp)
 		users.PUT("/:id", userController.Update)
+		users.GET("/:id", userController.GetOne)
 	}
 
 	opps := router.Group("opps")
