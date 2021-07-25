@@ -17,18 +17,18 @@ type AcceptedOpportunity struct {
 }
 
 type User struct {
-	ID                    primitive.ObjectID    `json:"_id" bson:"_id"`
+	ID                    primitive.ObjectID    `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name                  string                `json:"name" bson:"name" binding:"required"`
 	Email                 string                `json:"email" bson:"email" binding:"required"`
-	Password              string                `json:"password" bson:"password"`
+	Password              string                `json:"password,omitempty" bson:"password,omitempty"`
 	DateOfBirth           string                `json:"date_of_birth" bson:"date_of_birth" binding:"required"`
 	Gender                string                `json:"gender" bson:"gender" binding:"required"`
 	Availabilities        []string              `json:"availabilities" bson:"availabilities" binding:"required"`
-	AcceptedOpportunities []AcceptedOpportunity `json:"accepted_opps" bson:"accepted_opps"`
-	SMSNotification       bool                  `json:"sms_notification" bson:"sms_notification" binding:"required"`
-	EmailNotification     bool                  `json:"email_notification" bson:"email_notification" binding:"required"`
-	CreatedAt             string                `json:"created_at" bson:"created_at"`
-	UpdatedAt             string                `json:"updated_at" bson:"updated_at"`
+	AcceptedOpportunities []AcceptedOpportunity `json:"accepted_opps,omitempty" bson:"accepted_opps,omitempty"`
+	SMSNotification       *bool                 `json:"sms_notification" bson:"sms_notification" binding:"required"`
+	EmailNotification     *bool                 `json:"email_notification" bson:"email_notification" binding:"required"`
+	CreatedAt             string                `json:"created_at,omitempty" bson:"created_at,omitempty"`
+	UpdatedAt             string                `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 }
 
 func (u *User) GetOpps(userID string) ([]bson.M, error) {
