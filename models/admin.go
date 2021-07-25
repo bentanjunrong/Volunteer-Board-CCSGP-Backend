@@ -11,7 +11,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Admin struct{}
+type Admin struct {
+	ID                    primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Name                  string             `json:"name" bson:"name" binding:"required"`
+	Email                 string             `json:"email" bson:"email" binding:"required"`
+	Password              string             `json:"password,omitempty" bson:"password,omitempty"`
+	ApprovedOpportunities []string           `json:"accepted_opps,omitempty" bson:"accepted_opps,omitempty"`
+	CreatedAt             string             `json:"created_at,omitempty" bson:"created_at,omitempty"`
+	UpdatedAt             string             `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
+}
 
 func (a *Admin) Approve(id string) error {
 	objID, err := primitive.ObjectIDFromHex(id)
