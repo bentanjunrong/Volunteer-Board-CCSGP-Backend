@@ -120,7 +120,7 @@ func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	var res []map[string]interface{}
+	res := []map[string]interface{}{}
 	for _, obj := range allOpps {
 		opp := (obj["_source"]).(map[string]interface{})
 		if opp["status"] == "approved" {
