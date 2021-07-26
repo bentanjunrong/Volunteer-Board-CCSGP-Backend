@@ -80,7 +80,7 @@ func (oppC *OppController) Search(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"opportunities": matchedOpps})
+	c.JSON(http.StatusOK, matchedOpps)
 }
 
 func (oppC *OppController) GetOne(c *gin.Context) {
