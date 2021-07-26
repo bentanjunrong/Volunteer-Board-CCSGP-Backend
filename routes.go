@@ -51,6 +51,7 @@ func InitRouter() {
 		orgController := new(controllers.OrgController)
 		orgs.PUT("/:id", orgController.Update)
 		orgs.GET("/:id/opps", orgController.GetOpps)
+		orgs.GET("/:id", orgController.GetOne)
 	}
 
 	// health check route for the LB

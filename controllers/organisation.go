@@ -43,3 +43,16 @@ func (orgC *OrgController) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, updatedOrg)
 }
+
+func (orgC *OrgController) GetOne(c *gin.Context) {
+	id := c.Param("id")
+
+	user, err := orgModel.GetOne(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, user)
+}

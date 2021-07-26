@@ -82,3 +82,22 @@ func (o *Organisation) Update(orgID string, orgUpdate Organisation) (Organisatio
 
 	return *org, nil
 }
+
+func (o *Organisation) GetOne(id string) (bson.M, error) {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	org := bson.M{}
+	if err = db.GetCollection("orgs").FindOne(
+		ctx,
+		bson.M{"_id": objID},
+		options.FindOne().SetProjection(bson.M{"password": 0}),
+	).Decode(&org); err != nil {
+		return nil, err
+	}
+	return org, nil
+}
