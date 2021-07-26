@@ -16,6 +16,11 @@ type AcceptedOpportunity struct {
 	ShiftIDs []string `json:"shift_ids" bson:"shift_ids" binding:"required"`
 }
 
+type Availability struct {
+	From string `json:"from" bson:"from"  binding:"required"`
+	To   string `json:"to" bson:"to"  binding:"required"`
+}
+
 type User struct {
 	ID                    primitive.ObjectID    `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name                  string                `json:"name" bson:"name" binding:"required"`
@@ -23,7 +28,7 @@ type User struct {
 	Password              string                `json:"password,omitempty" bson:"password,omitempty"`
 	DateOfBirth           string                `json:"date_of_birth" bson:"date_of_birth" binding:"required"`
 	Gender                string                `json:"gender" bson:"gender" binding:"required"`
-	Availabilities        []string              `json:"availabilities" bson:"availabilities" binding:"required"`
+	Availabilities        []Availability        `json:"availabilities" bson:"availabilities" binding:"required"`
 	AcceptedOpportunities []AcceptedOpportunity `json:"accepted_opps,omitempty" bson:"accepted_opps,omitempty"`
 	SMSNotification       *bool                 `json:"sms_notification" bson:"sms_notification" binding:"required"`
 	EmailNotification     *bool                 `json:"email_notification" bson:"email_notification" binding:"required"`
