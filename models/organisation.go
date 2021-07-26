@@ -51,7 +51,7 @@ func (o *Organisation) GetOpps(orgID string) ([]bson.M, error) {
 	if err != nil {
 		return nil, err
 	}
-	var opps []bson.M
+	opps := []bson.M{}
 	if err = cursor.All(ctx, &opps); err != nil {
 		return nil, err
 	}
