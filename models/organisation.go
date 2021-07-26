@@ -12,16 +12,16 @@ import (
 )
 
 type Organisation struct {
-	ID                  primitive.ObjectID `json:"_id" bson:"_id"`
+	ID                  primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name                string             `json:"name" bson:"name" binding:"required"`
 	Email               string             `json:"email" bson:"email" binding:"required"`
-	Password            string             `json:"password" bson:"password" binding:"required"`
-	Description         string             `json:"description" bson:"description"`
-	Website             string             `json:"website" bson:"website"`
-	Causes              []string           `json:"causes" bson:"causes"` // TODO: replace with a struct with predifined vals
-	ListedOpportunities []string           `json:"listed_opps" bson:"listed_opps"`
-	CreatedAt           string             `json:"created_at" bson:"created_at"`
-	UpdatedAt           string             `json:"updated_at" bson:"updated_at"`
+	Password            string             `json:"password,omitempty" bson:"password,omitempty"`
+	Description         string             `json:"description,omitempty" bson:"description,omitempty"`
+	Website             string             `json:"website,omitempty" bson:"website,omitempty"`
+	Causes              []string           `json:"causes,omitempty" bson:"causes,omitempty"` // TODO: replace with a struct with predifined vals
+	ListedOpportunities []string           `json:"listed_opps,omitempty" bson:"listed_opps"`
+	CreatedAt           string             `json:"created_at,omitempty" bson:"created_at,omitempty"`
+	UpdatedAt           string             `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 }
 
 func (o *Organisation) GetOpps(orgID string) ([]bson.M, error) {
