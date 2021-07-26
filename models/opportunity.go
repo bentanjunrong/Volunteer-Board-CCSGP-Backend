@@ -123,8 +123,10 @@ func (o *Opportunity) Search(query string) ([]map[string]interface{}, error) {
 	var res []map[string]interface{}
 	for _, obj := range allOpps {
 		opp := (obj["_source"]).(map[string]interface{})
-		opp["id"] = obj["_id"]
-		res = append(res, opp)
+		if opp["status"] == "approved" {
+			opp["_id"] = obj["_id"]
+			res = append(res, opp)
+		}
 	}
 	return res, nil
 }
