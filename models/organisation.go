@@ -13,16 +13,15 @@ import (
 
 type Organisation struct {
 	ID                  primitive.ObjectID `json:"_id" bson:"_id"`
-	Name                string             `json:"name" binding:"required"`
-	Email               string             `json:"email" binding:"required"`
-	Password            string             `json:"password" binding:"required"`
-	Description         string             `json:"description"`
-	Logo                string             `json:"logo"`
-	Website             string             `json:"website"`
-	Causes              []string           `json:"causes"` // TODO: replace with a struct with predifined vals
-	ListedOpportunities []string           `json:"listed_opps"`
-	CreatedAt           string             `json:"created_at"`
-	UpdatedAt           string             `json:"updated_at"`
+	Name                string             `json:"name" bson:"name" binding:"required"`
+	Email               string             `json:"email" bson:"email" binding:"required"`
+	Password            string             `json:"password" bson:"password" binding:"required"`
+	Description         string             `json:"description" bson:"description"`
+	Website             string             `json:"website" bson:"website"`
+	Causes              []string           `json:"causes" bson:"causes"` // TODO: replace with a struct with predifined vals
+	ListedOpportunities []string           `json:"listed_opps" bson:"listed_opps"`
+	CreatedAt           string             `json:"created_at" bson:"created_at"`
+	UpdatedAt           string             `json:"updated_at" bson:"updated_at"`
 }
 
 func (o *Organisation) GetOpps(orgID string) ([]bson.M, error) {
