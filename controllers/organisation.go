@@ -11,6 +11,27 @@ type OrgController struct{}
 
 var orgModel = new(models.Organisation)
 
+func (orgC *OrgController) Create(c *gin.Context) {
+	orgID := c.Param("id")
+	var opp models.Opportunity
+	if err := c.ShouldBindJSON(&opp); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	oppID, err := orgModel.Create(orgID, opp)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"opp_id": oppID})
+}
+
 func (orgC *OrgController) GetOpps(c *gin.Context) {
 	orgID := c.Param("id")
 	opps, err := orgModel.GetOpps(orgID)

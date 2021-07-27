@@ -28,21 +28,6 @@ type Opportunity struct {
 	UpdatedAt        string             `json:"updated_at" bson:"updated_at"`
 }
 
-func (o *Opportunity) Create(opp Opportunity) (interface{}, error) {
-	for i := 0; i < len(opp.Shifts); i++ {
-		opp.Shifts[i].ID = primitive.NewObjectID()
-	}
-	opp.Status = "pending"
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	result, err := db.GetCollection("opps").InsertOne(ctx, opp)
-	if err != nil {
-		return "", err
-	}
-	return result.InsertedID, nil
-}
-
 func (o *Opportunity) isVacant(opp Opportunity) bool {
 	for _, shift := range opp.Shifts {
 		if len(shift.AcceptedUsers) < int(shift.Vacancies) {

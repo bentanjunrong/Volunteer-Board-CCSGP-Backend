@@ -29,7 +29,6 @@ func InitRouter() {
 		opps.GET("", oppController.GetAll)
 		opps.GET("/approved", oppController.GetAllApproved)
 		opps.GET("/pending", oppController.GetAllPending)
-		opps.POST("", oppController.Create)
 		opps.GET("/search", oppController.Search)
 		opps.GET("/:id", oppController.GetOne)
 		opps.POST("/:id/shifts", oppController.CreateShift)
@@ -52,6 +51,7 @@ func InitRouter() {
 		orgs.PUT("/:id", orgController.Update)
 		orgs.GET("/:id/opps", orgController.GetOpps)
 		orgs.GET("/:id", orgController.GetOne)
+		orgs.POST("/:id/opps", orgController.Create)
 	}
 
 	// health check route for the LB

@@ -24,6 +24,33 @@ type Organisation struct {
 	UpdatedAt           string             `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 }
 
+func (o *Organisation) Create(orgID string, opp Opportunity) (interface{}, error) {
+	objID, err := primitive.ObjectIDFromHex(orgID)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := 0; i < len(opp.Shifts); i++ {
+		opp.Shifts[i].ID = primitive.NewObjectID()
+	}
+	opp.Status = "pending"
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	result, err := db.GetCollection("opps").InsertOne(ctx, opp)
+	if err != nil {
+		return "", err
+	}
+
+	org := &Organisation{}
+	if err = db.GetCollection("orgs").FindOne(ctx, bson.M{"_id": objID}).Decode(&org); err != nil {
+		return nil, err
+	}
+	org.ListedOpportunities = append(org.ListedOpportunities, (result.InsertedID).(primitive.ObjectID).Hex())
+
+	return result.InsertedID, nil
+}
+
 func (o *Organisation) GetOpps(orgID string) ([]bson.M, error) {
 	objID, err := primitive.ObjectIDFromHex(orgID)
 	if err != nil {
