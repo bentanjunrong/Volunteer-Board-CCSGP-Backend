@@ -36,6 +36,15 @@ type User struct {
 	UpdatedAt             string                `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 }
 
+func contains(arr []string, val string) bool {
+	for _, a := range arr {
+		if a == val {
+			return true
+		}
+	}
+	return false
+}
+
 func (u *User) GetOpps(userID string) ([]bson.M, error) {
 	objID, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
@@ -74,6 +83,10 @@ func (u *User) ApplyOpp(userID string, oppID string, shiftIDs []string) error {
 	if err != nil {
 		return err
 	}
+	oppId, err := primitive.ObjectIDFromHex(oppID)
+	if err != nil {
+		return err
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -102,7 +115,19 @@ func (u *User) ApplyOpp(userID string, oppID string, shiftIDs []string) error {
 		return err
 	}
 
-	return nil
+	opp := &Opportunity{}
+	if err = db.GetCollection("opps").FindOne(ctx, bson.M{"_id": oppId}).Decode(&opp); err != nil {
+		return err
+	}
+	for i := 0; i < len(opp.Shifts); i++ {
+		// shiftID matches and userID not in acceptedusers yet
+		if contains(shiftIDs, opp.Shifts[i].ID.Hex()) && !contains(opp.Shifts[i].AcceptedUsers, userID) {
+			opp.Shifts[i].AcceptedUsers = append(opp.Shifts[i].AcceptedUsers, userID)
+		}
+	}
+	err = db.GetCollection("opps").FindOneAndUpdate(ctx, bson.M{"_id": oppId}, bson.M{"$set": opp}).Decode(&opp)
+
+	return err
 }
 
 func (u *User) Update(userID string, userUpdate User) (User, error) {
