@@ -13,7 +13,7 @@ import (
 
 // TODO: abstract these models such like in https://github.com/aoyinke/lianjiaEngine/blob/f51e8a446349e054d5cd851d3e2f80b2857825d6/model/model.go
 type Opportunity struct {
-	ID               primitive.ObjectID `json:"_id" bson:"_id"`
+	ID               primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Name             string             `json:"name" bson:"name" binding:"required"`
 	Description      string             `json:"description" bson:"description" binding:"required"`
 	OrganisationName string             `json:"organisation_name" bson:"organisation_name" binding:"required"`
