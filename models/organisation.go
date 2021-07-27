@@ -47,6 +47,9 @@ func (o *Organisation) Create(orgID string, opp Opportunity) (interface{}, error
 		return nil, err
 	}
 	org.ListedOpportunities = append(org.ListedOpportunities, (result.InsertedID).(primitive.ObjectID).Hex())
+	if err = db.GetCollection("orgs").FindOneAndUpdate(ctx, bson.M{"_id": objID}, bson.M{"$set": org}).Decode(&org); err != nil {
+		return nil, err
+	}
 
 	return result.InsertedID, nil
 }
